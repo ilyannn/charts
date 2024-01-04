@@ -23,6 +23,33 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
+{{- define "langfuse.connectionSecret" -}}
+{{- printf "%s-%s" (include "langfuse.fullname" .) "connection-secret" -}}
+{{- end }}
+
+{{- define "langfuse.internalSecret" -}}
+{{- printf "%s-%s" (include "langfuse.fullname" .) "internal-secret" -}}
+{{- end }}
+
+{{- define "langfuse.postgresqlSecret" -}}
+    {{- printf "%s" (tpl .Values.postgresql.auth.existingSecret $) -}}
+{{- end }}
+
+{{- define "langfuse.databaseHost" -}}
+{{- printf "%s.%s.%s" 
+    (include "postgresql.v1.primary.fullname" .Subcharts.postgresql) 
+    .Release.Namespace
+    "svc.cluster.local" -}}
+{{- end }}
+
+{{- define "langfuse.configMap" -}}
+{{- printf "%s-%s" (include "langfuse.fullname" .) "config-map" -}}
+{{- end }}
+
+{{- define "langfuse.databaseName" -}}
+{{- printf "%s" (tpl .Values.postgresql.auth.database .) -}}
+{{- end }}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -60,3 +87,49 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create a dictionary with keys and random values
+*/}}
+{{- define "langfuse.createRandomValuesForKeys" -}}
+  {{- $result := dict -}}
+  {{- range . -}}
+    {{- $_ := set $result . (randAlphaNum 100 | b64enc) -}}
+  {{- end -}}
+  {{- $result -}}
+{{- end -}}
+
+{{/*
+Add random values to all missing keys of a dictionary
+
+Usage:
+   include "langfuse.addRandomValuesForKeys" (dict "keys" (list "key1" "key2") "source" $originalDictionary) "indent" 4
+
+*/}}
+{{- define "langfuse.addRandomValuesForKeys" -}}
+  {{- $source := .source }}
+  {{- $indent := .indent }}
+  {{- range .keys -}} 
+  {{- $v := get $source . | default (randAlphaNum 100 | b64enc) -}}
+  {{- . | nindent $indent}} : {{ $v | quote }}
+  {{- end -}}
+{{- end -}}
+
+
+{{/*
+Defines a secret that fills missing fields with random values
+
+Usage:
+   include "langfuse.mergeSecretWithRandomForKeys" (dict "keys" (list "key1" "key2") "name" "someSecretName" "context" .)
+   
+*/}}
+{{- define "langfuse.mergeSecretWithRandomForKeys" -}}
+{{- $existingData := lookup "v1" "Secret" .context.Release.Namespace .name | dig "data" dict -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .name }}
+type: Opaque
+data:
+{{- include "langfuse.addRandomValuesForKeys" (dict "keys" .keys "source" $existingData "indent" 2) -}}
+{{ end -}}

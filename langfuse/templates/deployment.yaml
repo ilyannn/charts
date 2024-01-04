@@ -35,16 +35,58 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 3000
               protocol: TCP
+          env:
+            {{- if .Values.databaseURL }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{- include "langfuse.connectionSecret" . }}
+                  key: database-url
+            {{- else }}
+            - name: DATABASE_USERNAME
+              value: {{ .Values.postgresql.auth.username }}
+            - name: DATABASE_NAME
+              value: {{ include "langfuse.databaseName" . }}
+            - name: DATABASE_HOST
+              value: {{ include "langfuse.databaseHost" . }}
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.postgresqlSecret" . }}
+                  key: {{ .Values.postgresql.auth.secretKeys.userPasswordKey }}
+            {{- end }}
+            {{- if .Values.directURL }}
+            - name: DIRECT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.connectionSecret" . }}
+                  key: direct-url
+            {{- end }}
+            - name: NEXTAUTH_URL
+              value: {{ .Values.nextauthURL }}
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.internalSecret" . }}
+                  key: auth-secret
+            - name: SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.internalSecret" . }}
+                  key: salt
+          envFrom:
+            - configMapRef:
+                  name: {{ include "langfuse.configMap" . }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/public/health
               port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
