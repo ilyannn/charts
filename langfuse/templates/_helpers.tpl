@@ -35,6 +35,12 @@ If release name contains chart name it will be used as a full name.
     {{- printf "%s" (tpl .Values.postgresql.auth.existingSecret $) -}}
 {{- end }}
 
+{{- define "langfuse.postgresqlSecret.annotations" -}}
+{{- if .Values.postgresql.secret.alwaysKeepWhenUninstalled -}}
+    "helm.sh/resource-policy": "keep"
+{{- end }}
+{{- end }}
+
 {{- define "langfuse.databaseHost" -}}
 {{- printf "%s.%s.%s" 
     (include "postgresql.v1.primary.fullname" .Subcharts.postgresql) 
@@ -120,7 +126,12 @@ Usage:
 Defines a secret that fills missing fields with random values
 
 Usage:
-   include "langfuse.mergeSecretWithRandomForKeys" (dict "keys" (list "key1" "key2") "name" "someSecretName" "context" .)
+   include "langfuse.mergeSecretWithRandomForKeys" (dict 
+        "name" "someSecretName" 
+        "annotations" (dict "a" "b")
+        "keys" (list "key1" "key2") 
+        "context" .
+   )
    
 */}}
 {{- define "langfuse.mergeSecretWithRandomForKeys" -}}
@@ -129,7 +140,15 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ .name }}
+  {{- if .annotations }}
+  annotations: 
+    {{- .annotations | nindent 4 }}
+  {{- end }}
 type: Opaque
 data:
-{{- include "langfuse.addRandomValuesForKeys" (dict "keys" .keys "source" $existingData "indent" 2) -}}
-{{ end -}}
+{{- include "langfuse.addRandomValuesForKeys" (dict 
+    "keys" .keys 
+    "source" $existingData 
+    "indent" 2
+  ) -}}
+{{- end -}}
