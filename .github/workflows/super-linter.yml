@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install Helm
-        run: curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | sh
+        run: curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
       - name: Checkout code
         uses: actions/checkout@v3
