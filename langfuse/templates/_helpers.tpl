@@ -41,11 +41,17 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
+{{- define "langfuse.internalSecret.annotations" -}}
+    "helm.sh/resource-policy": "keep"
+{{- end }}
+ 
 {{- define "langfuse.databaseHost" -}}
+{{- if .Values.postgresql.enabled -}}
 {{- printf "%s.%s.%s" 
     (include "postgresql.v1.primary.fullname" .Subcharts.postgresql) 
     .Release.Namespace
     "svc.cluster.local" -}}
+{{- end }}
 {{- end }}
 
 {{- define "langfuse.configMap" -}}
