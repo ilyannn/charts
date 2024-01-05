@@ -24,9 +24,6 @@ jobs:
   lint-generated-manifests:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Bitnami Helm Repo
-        run: helm repo add bitnami https://charts.bitnami.com/bitnami
-
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -41,11 +38,21 @@ jobs:
               fi
           done
 
-      - name: Find Helm
-        id: save_helm_path
-        run: echo "::set-output name=HELM_PATH::$(which helm)"
-
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+  
       - name: Generate and validate releases
-        uses: shivjm/helm-kubeconform-action@v0.2.0
-        env: 
-          HELM: ${{ steps.save_helm_path.outputs.HELM_PATH }}
+        uses: docker://ghcr.io/shivjm/helm-kubeconform-action:v0.2.0
+    
+#    - name: Find Helm
+#        id: save_helm_path
+#        run: echo "::set-output name=HELM_PATH::$(which helm)"
+#
+#      - name: Generate and validate releases
+#        uses: shivjm/helm-kubeconform-action@v0.2.0
+#        env: 
+#          HELM: ${{ steps.save_helm_path.outputs.HELM_PATH }}
