@@ -40,5 +40,6 @@ jobs:
                     mv $dir charts/
                 fi
             done
+          
       - name: Generate and validate releases
         uses: shivjm/helm-kubeconform-action@v0.2.0
