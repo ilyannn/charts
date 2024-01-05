@@ -17,12 +17,15 @@ toggles:
   experimentalFeatures: false
   telemetry: true
 
+# This secret's fields (in the ENV_VAR: value format) are added to the Langfuse config
+additionalConfigurationSecret:
+
 
 # ------------ Postgres subchart
 
 postgresql:
   # Setting this to false will prevent automatic installation of the Postgresql subchart
-  enabled: true
+  enabled: false
 
   auth:
     # You can set up the authentication in advance by creating this secret
