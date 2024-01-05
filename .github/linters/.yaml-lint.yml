@@ -1,0 +1,8 @@
+extends: default
+
+ignore-from-file: [.gitignore, .github/linters/.yamlignore]
+
+rules:
+  comments: disable
+  document-start: disable
+  line-length: disable

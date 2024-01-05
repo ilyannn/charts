@@ -6,7 +6,8 @@ on: # yamllint disable-line rule:truthy
   pull_request:
     branches: ["main"]
 jobs:
-  run-lint:
+
+  lint-code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,3 +20,17 @@ jobs:
         env:
           DEFAULT_BRANCH: "main"
           VALIDATE_ALL_CODEBASE: true
+          VALIDATE_KUBERNETES_KUBECONFORM: false
+
+  lint-generated-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Generate and validate releases
+        uses: shivjm/helm-kubeconform-action@v0.2.0
+        with:
+          chartsDirectory: "charts"
