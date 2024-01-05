@@ -41,5 +41,11 @@ jobs:
               fi
           done
 
+      - name: Find Helm
+        id: save_helm_path
+        run: echo "::set-output name=HELM_PATH::$(which helm)"
+
       - name: Generate and validate releases
         uses: shivjm/helm-kubeconform-action@v0.2.0
+        env: 
+          HELM: ${{ steps.save_helm_path.outputs.HELM_PATH }}
