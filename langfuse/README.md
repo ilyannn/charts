@@ -5,7 +5,7 @@ See [values.yaml](values.yaml) for the chart values. They are subject to change!
 ## Installation
 
 ```shell
-helm install langfuse-demo https://github.com/ilyannn/charts/releases/download/langfuse-v0.2.0/langfuse-0.2.0.tgz -f langfuse-values.yaml
+helm install langfuse-demo https://ilyannn.github.io/charts/langfuse -f langfuse-values.yaml
 ```
 
 
