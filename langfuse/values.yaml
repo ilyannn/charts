@@ -39,7 +39,7 @@ postgresql:
     # Set this to false if you want the secret to be deleted with `helm delete`
     # This has no effect unless createIfMissing is also true.
     # Warning: reinstalling the chart will generate a new password, but Postgres will 
-    # continue to use an old password since it's stored on the the PVC.
+    # continue to use an old password since it's stored on the PVC.
     alwaysKeepWhenUninstalled: true
     
   

@@ -12,13 +12,16 @@ helm install langfuse-demo https://github.com/ilyannn/charts/releases/download/l
 
 ### Default Installation
 
-With the default values, Langfuse will be installed with the bundled Postgres.
-The password will be generated and saved in a secret (in this case, `langfuse-demo-postgres-secret`) 
+By default, Langfuse will be installed with the bundled Postgres.
+
+The password will be generated and saved in a `Secret` (in this case, `langfuse-demo-postgres-secret`).
 
 
-### Connecting existing Postgres instance
+### OAuth 
 
-You can pass the exising connection URL.
+### Using Existing Database Connection
+
+Disable the bundled database and pass an exising connection URL instead.
 
 ```yaml
 databaseURL: "postgresql://some-existing-url"
@@ -26,3 +29,30 @@ databaseURL: "postgresql://some-existing-url"
 postgresql:
   enabled: false
 ```
+
+
+### Accessing the installation
+
+The chart comes with an ingress that can be set up with
+
+```yaml
+ingress:
+  enabled: true
+  hosts: ...
+```
+
+
+### Uninstalling
+
+
+The usual `helm uninstall RELEASE_NAME` should work, but note that the following objects are not deleted automatically:
+
+- the data PVC of the `postgres` subchart (if the subchart was enabled)
+- the `-postgres-secret` secret (unless `postgresql.secret.alwaysKeepWhenUninstalled` is unset)
+
+This means that you can reinstall the chart and continue accessing the same data. 
+
+
+### Example values
+
+See [megaver.se demo](https://docs.cluster.megaver.se/cluster/langfuse-demo-values.yaml)
