@@ -41,7 +41,11 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
-{{- define "langfuse.databaseHost" -}}
+{{- define "langfuse.internalSecret.annotations" -}}
+    "helm.sh/resource-policy": "keep"
+{{- end }}
+ 
+ "langfuse.databaseHost" -}}
 {{- printf "%s.%s.%s" 
     (include "postgresql.v1.primary.fullname" .Subcharts.postgresql) 
     .Release.Namespace
