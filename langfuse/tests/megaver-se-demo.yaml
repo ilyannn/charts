@@ -8,7 +8,7 @@ additionalConfigurationSecret: langfuse-additional-options
 
 postgresql:
   enabled: true
-  
+
 ingress:
   enabled: true
   annotations:

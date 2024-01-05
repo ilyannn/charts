@@ -8,7 +8,6 @@ See [values.yaml](values.yaml) for the chart values. They are subject to change!
 helm install langfuse-demo https://ilyannn.github.io/charts/langfuse -f langfuse-values.yaml
 ```
 
-
 ### Using Existing Database Connection
 
 By default, the bundled database is disabled so a connection URL is required.
@@ -18,7 +17,6 @@ databaseURL: "postgresql://some-existing-url"
 ```
 
 The alternative format of `DATABASE_HOST` etc. can be used in the additional options below.
-
 
 ### Using Bundled Postgres
 
@@ -31,7 +29,6 @@ postgresql:
 
 The password will be generated and saved in a `Secret` (in this case, named `langfuse-demo-postgres-secret`).
 
-
 ### Accessing the installation
 
 The chart comes with an ingress that can be set up with
@@ -42,13 +39,11 @@ ingress:
   hosts: ...
 ```
 
-
 ### Additional options
 
 Any options not present in the [values file](values.yaml) can be put into a `Secret` to be passed to Langfuse:
 
 ```yaml
-...
 additionalConfigurationSecret: langfuse-additional-options
 ```
 
@@ -60,9 +55,7 @@ kubectl create secret generic langfuse-additional-options \
   --from-literal=AUTH_GITHUB_CLIENT_SECRET=...
 ```
 
-
 ## Uninstalling
-
 
 The usual `helm uninstall RELEASE_NAME` should work, but note that the following objects are not deleted automatically:
 
@@ -70,8 +63,7 @@ The usual `helm uninstall RELEASE_NAME` should work, but note that the following
 - the `-postgres-secret` secret (unless `postgresql.secret.alwaysKeepWhenUninstalled` is unset)
 - the `-internal-secret` secret
 
-This means that you can reinstall the chart and continue accessing the same data. 
-
+This means that you can reinstall the chart and continue accessing the same data.
 
 ## Example values
 
