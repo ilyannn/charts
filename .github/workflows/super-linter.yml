@@ -26,7 +26,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0
+      - name: Delete .git
+        run: rm -rf .git
       - name: Generate and validate releases
         uses: shivjm/helm-kubeconform-action@v0.2.0
         with:
