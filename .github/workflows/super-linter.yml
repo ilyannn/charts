@@ -38,7 +38,7 @@ jobs:
                   mv $dir charts/
               fi
           done
-        
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -48,8 +48,8 @@ jobs:
 
       - name: Generate and validate releases
         uses: docker://ghcr.io/shivjm/helm-kubeconform-action:v0.2.0
-        env: 
-          CHARTS_DIRECTORY: charts 
+        env:
+          CHARTS_DIRECTORY: charts
           HELM_UPDATE_DEPENDENCIES: false
-          LOG_LEVEL: trace 
+          LOG_LEVEL: trace
           LOG_JSON: false
