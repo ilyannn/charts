@@ -1,0 +1,4 @@
+postgresql:
+  enabled: false
+
+databaseURL: "postgresql://user:password@example.com:1234/database"

@@ -1,0 +1,25 @@
+image:
+  repository: registry.cluster.megaver.se/ilyannn/langfuse
+  tag: main
+
+nextauthURL: https://langfuse-demo.cluster.megaver.se
+
+additionalConfigurationSecret: langfuse-additional-options
+
+postgresql:
+  enabled: true
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-httpsonly@kubernetescrd
+  hosts:
+    - host: langfuse-demo.cluster.megaver.se
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: langfuse-demo-tls
+      hosts:
+        - langfuse-demo.cluster.megaver.se

@@ -38,13 +38,7 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-            {{- if .Values.databaseURL }}
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{- include "langfuse.connectionSecret" . }}
-                  key: database-url
-            {{- else }}
+            {{- if .Values.postgresql.enabled }}
             - name: DATABASE_USERNAME
               value: {{ .Values.postgresql.auth.username }}
             - name: DATABASE_NAME
@@ -56,6 +50,12 @@ spec:
                 secretKeyRef:
                   name: {{ include "langfuse.postgresqlSecret" . }}
                   key: {{ .Values.postgresql.auth.secretKeys.userPasswordKey }}
+            {{- else }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.connectionSecret" . }}
+                  key: database-url
             {{- end }}
             {{- if .Values.directURL }}
             - name: DIRECT_URL
@@ -78,7 +78,11 @@ spec:
                   key: salt
           envFrom:
             - configMapRef:
-                  name: {{ include "langfuse.configMap" . }}
+                name: {{ include "langfuse.configMap" . }}
+            {{- if .Values.additionalConfigurationSecret }}
+            - secretRef:
+                name: {{ .Values.additionalConfigurationSecret }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /api/public/health
