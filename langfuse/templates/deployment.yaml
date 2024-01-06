@@ -79,10 +79,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "langfuse.configMap" . }}
-            {{- if .Values.additionalConfigurationSecret }}
-            - secretRef:
-                name: {{ .Values.additionalConfigurationSecret }}
-            {{- end }}
+            {{- include "langfuse.additionalSecrets" . }}
           livenessProbe:
             httpGet:
               path: /api/public/health
