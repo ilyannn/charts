@@ -44,6 +44,7 @@ If release name contains chart name it will be used as a full name.
 {{- define "langfuse.postgresqlSecret.annotations" -}}
 {{- if .Values.secrets.postgres.keepWhenUninstalled -}}
     "helm.sh/resource-policy": "keep"
+    "argocd.argoproj.io/sync-options": "Prune=false"
 {{- end }}
 {{- end }}
 
