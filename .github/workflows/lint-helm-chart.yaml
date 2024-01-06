@@ -66,8 +66,9 @@ jobs:
 
       - name: Run chart-testing (list-changed)
         id: list-changed
+        # The default branch name will be 'main' soon
         run: |
-          changed=$(ct list-changed)
+          changed=$(ct list-changed --target-branch main)
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
