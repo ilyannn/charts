@@ -78,7 +78,11 @@ spec:
                   key: salt
           envFrom:
             - configMapRef:
-                  name: {{ include "langfuse.configMap" . }}
+                name: {{ include "langfuse.configMap" . }}
+            {{- if .Values.additionalConfigurationSecret }}
+            - secretRef:
+                name: {{ .Values.additionalConfigurationSecret }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /api/public/health
