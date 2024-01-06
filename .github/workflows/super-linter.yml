@@ -29,15 +29,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Prepare a folder that only contains charts
+      - name: Prepare a charts folder
         run: |
           mkdir -p charts
           for dir in $(ls -d */); do
               if [[ $dir != charts/ && $dir != .* ]] ; then
+                  helm dependency build $dir          
                   mv $dir charts/
               fi
           done
-
+        
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -47,11 +48,8 @@ jobs:
 
       - name: Generate and validate releases
         uses: docker://ghcr.io/shivjm/helm-kubeconform-action:v0.2.0
-#    - name: Find Helm
-#        id: save_helm_path
-#        run: echo "::set-output name=HELM_PATH::$(which helm)"
-#
-#      - name: Generate and validate releases
-#        uses: shivjm/helm-kubeconform-action@v0.2.0
-#        env:
-#          HELM: ${{ steps.save_helm_path.outputs.HELM_PATH }}
+        env: 
+          CHARTS_DIRECTORY: charts 
+          HELM_UPDATE_DEPENDENCIES: false
+          LOG_LEVEL: trace 
+          LOG_JSON: false
