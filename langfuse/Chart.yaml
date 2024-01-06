@@ -1,6 +1,8 @@
 apiVersion: v2
 name: langfuse
 description: An experimental Helm chart for Langfuse
+maintainers:
+  - name: ilyannn
 
 # A chart can be either an 'application' or a 'library' chart.
 #
