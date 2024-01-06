@@ -1,8 +1,7 @@
 name: Test Helm Charts
 
 on: # yamllint disable-line rule:truthy
-  push:
-    branches: ["*"]
+  push: {}
 
 jobs:
   lint-with-kubeconform:

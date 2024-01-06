@@ -1,8 +1,8 @@
 name: Lint Code Base
 
 on: # yamllint disable-line rule:truthy
-  push:
-    branches: ["*"]
+  push: {}
+  
 jobs:
   lint-code:
     runs-on: ubuntu-latest
