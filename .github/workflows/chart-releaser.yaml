@@ -29,13 +29,12 @@ jobs:
           version: v3.11.1
 
       - name: Add missing repositories
+        # On second thought, let's add the repo manually
         # https://github.com/helm/helm/issues/9903#issue-935152749
         # https://github.com/helm/helm/issues/8036#issuecomment-1126959239
         run: |
-          if [ -f "./Chart.lock" ]; then
-            yq --indent 0 '.dependencies | map(["helm", "repo", "add", .name, .repository] | join(" ")) | .[]' "./Chart.lock"  | sh --
-          fi
-
+          helm repo add https://charts.bitnami.com/bitnami
+          
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
