@@ -64,13 +64,13 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed --config .github/linters/chart-testing.yaml }})
+          changed=$(ct list-changed --config .github/linters/chart-testing.yaml)
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint --config .github/linters/chart-testing.yaml }}
+        run: ct lint --config .github/linters/chart-testing.yaml
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.8.0
