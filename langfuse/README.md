@@ -10,16 +10,15 @@ helm install langfuse-demo https://ilyannn.github.io/charts/langfuse -f langfuse
 
 ### Config-Free Installation
 
-The default values set up the bundled Postgres, and the chart takes care of and setting up 
-the authentication between the database and the service. 
+The default values set up the bundled Postgres, and the chart takes care of and setting up
+the authentication between the database and the service.
 
 The Postgres password will be generated and saved in a `Secret` (in the example above, named
 `langfuse-demo-postgres-secret`).
 
-
 ### Connecting to an Existing Database
 
-If the bundled chart is disabled, one can authenticate to an existing database. 
+If the bundled chart is disabled, one can authenticate to an existing database.
 
 ```yaml
 postgresql:
@@ -27,7 +26,6 @@ postgresql:
 
 databaseURL: "postgresql://some-existing-url"
 ```
-
 
 ### Accessing the installation
 
