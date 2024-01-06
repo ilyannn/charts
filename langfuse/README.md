@@ -27,8 +27,6 @@ postgresql:
 databaseURL: "postgresql://some-existing-url"
 ```
 
-
-
 ### Accessing the Installation
 
 The chart comes with an ingress that can be set up with
@@ -71,8 +69,7 @@ secrets:
     - my-postgres-connection # field name is DATABASE_URL
 ```
 
-
-## Notes on Uninstalling 
+## Notes on Uninstalling
 
 The usual `helm uninstall RELEASE_NAME` should work, but note that the following objects are not deleted automatically:
 
