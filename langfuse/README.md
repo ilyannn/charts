@@ -18,7 +18,7 @@ The Postgres password will be generated and saved in a `Secret` (in the example 
 
 ### Connecting to an Existing Database
 
-If the bundled chart is disabled, one can authenticate to an existing database.
+If the bundled chart is disabled, one can authenticate to an existing database using the `databaseURL` value:
 
 ```yaml
 postgresql:
@@ -27,7 +27,9 @@ postgresql:
 databaseURL: "postgresql://some-existing-url"
 ```
 
-### Accessing the installation
+
+
+### Accessing the Installation
 
 The chart comes with an ingress that can be set up with
 
@@ -35,34 +37,52 @@ The chart comes with an ingress that can be set up with
 ingress:
   enabled: true
   hosts: ...
+  tls: ...
 ```
 
-### Additional options
+### Additional Options
 
-Any options not present in the [values file](values.yaml) can be put into a `Secret` to be passed to Langfuse:
+Any options not available in the [values file](values.yaml) can be manually put into a `Secret` and passed in the `secrets.additional` value:
 
 ```yaml
-additionalConfigurationSecret: langfuse-additional-options
+secrets:
+  additional:
+    - my-github-options
+    - my-google-options
+    - ...
 ```
 
-You can create and update the secret at any time as it will not be managed by Helm.
+You should create the secrets before installing the chart:
 
 ```shell
-kubectl create secret generic langfuse-additional-options \
+kubectl create secret generic my-github-options \
   --from-literal=AUTH_GITHUB_CLIENT_ID=... \
   --from-literal=AUTH_GITHUB_CLIENT_SECRET=...
 ```
 
-## Uninstalling
+This can also be used to avoid providing `databaseURL` in plaintext:
+
+```yaml
+postgresql:
+  enabled: false
+
+secrets:
+  additional:
+    - my-postgres-connection # field name is DATABASE_URL
+```
+
+
+## Notes on Uninstalling 
 
 The usual `helm uninstall RELEASE_NAME` should work, but note that the following objects are not deleted automatically:
 
-- the data PVC of the `postgres` subchart (if the subchart was enabled)
-- the `-postgres-secret` secret (unless `postgresql.secret.alwaysKeepWhenUninstalled` is unset)
 - the `-internal-secret` secret
+- the `-postgres-secret` secret (unless `postgresql.secret.alwaysKeepWhenUninstalled` is unset)
+- the data PVC of the `postgres` subchart (if the subchart was enabled)
+- the TLS secret of the ingress (if the ingress was enabled)
 
 This means that you can reinstall the chart and continue accessing the same data.
 
-## Example values
+## Example Value Chart
 
 See [megaver.se demo](https://docs.cluster.megaver.se/cluster/langfuse-demo-values.yaml)

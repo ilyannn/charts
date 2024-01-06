@@ -28,7 +28,13 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{- define "langfuse.internalSecret" -}}
-{{- printf "%s-%s" (include "langfuse.fullname" .) "internal-secret" -}}
+    {{- printf "%s" (tpl .Values.secrets.internal.name $) -}}
+{{- end }}
+
+{{- define "langfuse.internalSecret.annotations" -}}
+{{- if .Values.secrets.internal.keepWhenUninstalled -}}
+    "helm.sh/resource-policy": "keep"
+{{- end }}
 {{- end }}
 
 {{- define "langfuse.postgresqlSecret" -}}
@@ -36,14 +42,18 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{- define "langfuse.postgresqlSecret.annotations" -}}
-{{- if .Values.postgresql.secret.alwaysKeepWhenUninstalled -}}
+{{- if .Values.secrets.postgres.keepWhenUninstalled -}}
     "helm.sh/resource-policy": "keep"
 {{- end }}
 {{- end }}
 
-{{- define "langfuse.internalSecret.annotations" -}}
-    "helm.sh/resource-policy": "keep"
+{{- define "langfuse.additionalSecrets" -}}
+          {{- range .Values.secrets.additional }}
+            - secretRef:
+                name: {{ . }}
+          {{- end }}
 {{- end }}
+
  
 {{- define "langfuse.databaseHost" -}}
 {{- if .Values.postgresql.enabled -}}
@@ -106,7 +116,7 @@ Create a dictionary with keys and random values
 {{- define "langfuse.createRandomValuesForKeys" -}}
   {{- $result := dict -}}
   {{- range . -}}
-    {{- $_ := set $result . (randAlphaNum 100 | b64enc) -}}
+    {{- $_ := set $result . (randAlphaNum 50 | b64enc) -}}
   {{- end -}}
   {{- $result -}}
 {{- end -}}
