@@ -15,10 +15,10 @@ jobs:
       - name: Prepare a charts folder
         run: |
           mkdir -p charts
-          for dir in $(ls -d */); do
+          for dir in */; do
               if [[ $dir != charts/ && $dir != .* ]] ; then
-                  helm dependency build $dir
-                  mv $dir charts/
+                  helm dependency build "$dir"
+                  mv "$dir" charts/
               fi
           done
 
