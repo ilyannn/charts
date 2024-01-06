@@ -1,15 +1,14 @@
 # ------------ Core options
 
-# By default, the postgres subchart will be installed and the connection set up.
-# Specify postgresql.enabled: false and provide this value to use an existing Postgres
-# installation or to set it up manually.
-databaseURL: ""
-
-# Used for migrations
-directURL: ""
-
-# This one must agree with the app's URL for OAuth to work
+# This URL must agree with the app's URL for OAuth to work
 nextauthURL: http://localhost:3000
+
+# By default, the postgres subchart will be installed and the connection value overridden.
+# Disable the bundled subchart using postgresql.enabled if you want to use this setting.
+databaseURL: "postgresql://postgres:postgres@localhost:5432/postgres"
+
+# This URL is used for migrations
+directURL: ""
 
 # Several toggles for Langfuse functionality
 toggles:
@@ -23,8 +22,8 @@ additionalConfigurationSecret:
 # ------------ Postgres subchart
 
 postgresql:
-  # Setting this to false will prevent automatic installation of the Postgresql subchart
-  enabled: false
+  # Setting this to false will not install the bundled Postgres subchart
+  enabled: true
 
   auth:
     # You can set up the authentication in advance by creating this secret

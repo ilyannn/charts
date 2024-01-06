@@ -8,26 +8,26 @@ See [values.yaml](values.yaml) for the chart values. They are subject to change!
 helm install langfuse-demo https://ilyannn.github.io/charts/langfuse -f langfuse-values.yaml
 ```
 
-### Using Existing Database Connection
+### Config-Free Installation
 
-By default, the bundled database is disabled so a connection URL is required.
+The default values set up the bundled Postgres, and the chart takes care of and setting up 
+the authentication between the database and the service. 
 
-```yaml
-databaseURL: "postgresql://some-existing-url"
-```
+The Postgres password will be generated and saved in a `Secret` (in the example above, named
+`langfuse-demo-postgres-secret`).
 
-The alternative format of `DATABASE_HOST` etc. can be used in the additional options below.
 
-### Using Bundled Postgres
+### Connecting to an Existing Database
 
-With the bundled Postgres enabled, the chart takes care of installing it and setting up authentication.
+If the bundled chart is disabled, one can authenticate to an existing database. 
 
 ```yaml
 postgresql:
-  enabled: true
+  enabled: false
+
+databaseURL: "postgresql://some-existing-url"
 ```
 
-The password will be generated and saved in a `Secret` (in this case, named `langfuse-demo-postgres-secret`).
 
 ### Accessing the installation
 
