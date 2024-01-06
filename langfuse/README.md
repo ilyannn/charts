@@ -71,12 +71,12 @@ secrets:
 
 ## Notes on Uninstalling
 
-The usual `helm uninstall RELEASE_NAME` should work, but note that the following objects are not deleted automatically:
+The usual `helm uninstall RELEASE_NAME` should work,
+but note that the following objects are not deleted automatically with the default values:
 
-- the `-internal-secret` secret
-- the `-postgres-secret` secret (unless `postgresql.secret.alwaysKeepWhenUninstalled` is unset)
 - the data PVC of the `postgres` subchart (if the subchart was enabled)
-- the TLS secret of the ingress (if the ingress was enabled)
+- the `-postgres-secret` secret (if the subchart was enabled, controlled by `secrets.postgresql.keepWhenUninstalled`)
+- the `-internal-secret` secret (controlled by `secrets.internal.keepWhenUninstalled`)
 
 This means that you can reinstall the chart and continue accessing the same data.
 

@@ -3,7 +3,7 @@
 # This URL must agree with the app's URL for OAuth to work
 nextauthURL: http://localhost:3000
 
-# By default, the postgres subchart will be installed and the connection value overridden.
+# By default, the postgresql subchart will be installed and the connection value overridden.
 # Disable the bundled subchart using postgresql.enabled if you want to use this setting.
 databaseURL: "postgresql://postgres:postgres@localhost:5432/postgres"
 
@@ -18,20 +18,25 @@ toggles:
 
 # Where the non-public Langfuse configuration is stored
 secrets:
-  postgres:
+  # This group of settings is only relevant if postgresql.enabled is set.
+  postgresql:
     # If set (default), random values are saved in the postgresql.auth.existingSecret secret
     # for all the missing keys (existing values for these keys are preserved).
     # If unset, you are expected to create the secret yourself before installing the chart.
-    createIfMissing: true
+    automaticallyManage: true
     # If set, the secret will be annotated so that it is kept with `helm uninstall`
     # If unset, the secret will be deleted with `helm uninstall`
-    # This has no effect unless createIfMissing is also true.
+    # This has no effect unless automaticallyManage is also true.
     # Warning: reinstalling the chart with this value unset will generate a new password,
     # but Postgres will continue to use an old password since it's stored on the PVC.
     keepWhenUninstalled: true
   internal:
     # You can change the name to make several installations share the API keys.
     name: "{{ .Release.Name }}-internal-secret"
+    # If set (default), random values are saved in the secrets.internal.name secret
+    # for all the missing keys (existing values for these keys are preserved).
+    # If unset, you are expected to create the secret yourself before installing the chart.
+    automaticallyManage: true
     # If set, the secret will be annotated so that it is kept with `helm uninstall`
     # If unset, the secret will be deleted with `helm uninstall`
     # Warning: reinstalling the chart with this value unset will generate a new salt thus
