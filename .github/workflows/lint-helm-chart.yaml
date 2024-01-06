@@ -17,7 +17,7 @@ jobs:
           mkdir -p charts
           for dir in $(ls -d */); do
               if [[ $dir != charts/ && $dir != .* ]] ; then
-                  helm dependency build $dir          
+                  helm dependency build $dir
                   mv $dir charts/
               fi
           done
