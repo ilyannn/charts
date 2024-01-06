@@ -29,4 +29,4 @@ jobs:
         # https://github.com/helm/helm/issues/9903#issue-935152749
         # https://github.com/helm/helm/issues/8036#issuecomment-1126959239
         run: |
-          helm repo add https://charts.bitnami.com/bitnami
+          helm repo add bitnami https://charts.bitnami.com/bitnami
