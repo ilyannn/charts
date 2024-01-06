@@ -7,6 +7,10 @@ jobs:
   lint-with-kubeconform:
     runs-on: ubuntu-latest
     steps:
+      - name: Add necessary repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -28,11 +32,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add necessary repos
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-
       - name: Generate and validate releases
         uses: docker://ghcr.io/shivjm/helm-kubeconform-action:v0.2.0
         env:
