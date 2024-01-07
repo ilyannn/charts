@@ -80,14 +80,10 @@ spec:
             - configMapRef:
                 name: {{ include "langfuse.configMap" . }}
             {{- include "langfuse.additionalSecrets" . }}
-          livenessProbe:
+          readinessProbe:
             httpGet:
               path: /api/public/health
               port: http
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
