@@ -3,6 +3,23 @@ entries:
   langfuse:
   - apiVersion: v2
     appVersion: 1.28.0
+    created: "2024-01-09T21:15:20.135347707Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.2.27
+    description: An experimental Helm chart for Langfuse
+    digest: dd800c03ab7e88fe888522cdf4656e19239a86d17ff048e4ccbbad12252d971c
+    maintainers:
+    - name: ilyannn
+    name: langfuse
+    type: application
+    urls:
+    - https://github.com/ilyannn/charts/releases/download/langfuse-0.3.2/langfuse-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: 1.28.0
     created: "2024-01-07T13:49:35.76107656Z"
     dependencies:
     - condition: postgresql.enabled
@@ -52,4 +69,4 @@ entries:
     urls:
     - https://github.com/ilyannn/charts/releases/download/langfuse-0.2.1/langfuse-0.2.1.tgz
     version: 0.2.1
-generated: "2024-01-07T13:49:35.761095355Z"
+generated: "2024-01-09T21:15:20.135371461Z"
