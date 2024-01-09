@@ -27,6 +27,32 @@ spec:
       serviceAccountName: {{ include "langfuse.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: check-postgres
+          image: busybox:latest
+          env:
+            {{- if .Values.postgresql.enabled }}
+            - name: DATABASE_HOST
+              value: {{ include "langfuse.databaseHost" . | quote }}
+            - name: DATABASE_PORT
+              value: "5432"
+            {{- else }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langfuse.connectionSecret" . | quote }}
+                  key: database-url
+            {{- end }}
+          command:
+            - sh
+            - -c
+            - >
+              until nc -z -v -w30 
+              ${DATABASE_HOST:-$(echo $DATABASE_URL | awk -F[/:] '{print $4}')} 
+              ${DATABASE_PORT:-$(echo $DATABASE_URL | awk -F[/:] '{print $5}'):-"5432"} ; do
+                echo 'Waiting for Postgres...' ;
+                sleep 5 ;
+              done
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -80,10 +106,16 @@ spec:
             - configMapRef:
                 name: {{ include "langfuse.configMap" . }}
             {{- include "langfuse.additionalSecrets" . }}
-          readinessProbe:
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
             httpGet:
               path: /api/public/health
               port: http
+            periodSeconds: 20
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

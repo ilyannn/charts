@@ -10,16 +10,9 @@ databaseURL: "postgresql://postgres:postgres@localhost:5432/postgres"
 # This URL is used for migrations
 directURL: ""
 
-# Several toggles for Langfuse functionality
-toggles:
-  disablePublicSignup: false
-  experimentalFeatures: false
-  telemetry: true
-
 # Where the non-public Langfuse configuration is stored
 secrets:
-  # This group of settings is only relevant if postgresql.enabled is set.
-  postgresql:
+  postgresql:  # This group of settings is only relevant if postgresql.enabled is set.
     # If set (default), random values are saved in the postgresql.auth.existingSecret secret
     # for all the missing keys (existing values for these keys are preserved).
     # If unset, you are expected to create the secret yourself before installing the chart.
@@ -31,6 +24,7 @@ secrets:
     # but Postgres will continue to use an old password since it's stored on the PVC.
     keepWhenUninstalled: true
   internal:
+    # By default, each installation gets their own internal secret
     # You can change the name to make several installations share the API keys.
     name: "{{ .Release.Name }}-internal-secret"
     # If set (default), random values are saved in the secrets.internal.name secret
@@ -45,6 +39,12 @@ secrets:
   # These secret's fields (in the ENV_VAR: value format) are added to the Langfuse config
   # You will need to manage those manually; they will not be touched by the chart.
   additional: []
+
+# Several toggles for Langfuse functionality
+toggles:
+  disablePublicSignup: false
+  experimentalFeatures: false
+  telemetry: true
 
 # ------------ Postgres subchart
 
@@ -116,18 +116,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources:
-  {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-#   cpu: 100m
-#   memory: 128Mi
+resources: {}
 
 autoscaling:
   enabled: false
