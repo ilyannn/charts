@@ -4,5 +4,5 @@ chart-dirs:
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
 
-# The default branch name will be 'main' soon
+# The default branch name will be 'main' soon, but for now we need this.
 target-branch: main
